@@ -2,7 +2,7 @@
 
 Спецификация и фикстуры для распространения пакетов Moon через **GitHub Releases** и **semver git tags** (`vX.Y.Z`).
 
-Клиентская реализация (`moon add`, `moon vendor`, `moon publish`) живёт в [moon-lang](https://github.com/nnxlxde-stack/moon-lang).
+Клиентская реализация (`moon add`, `moon vendor`, `moon publish`) живёт в [moon-lang](https://github.com/nnxlxde-stack/moon-lang). Поддерживаются `github.com`, `gitlab.com` и self-hosted HTTPS git.
 
 ## Документация
 
