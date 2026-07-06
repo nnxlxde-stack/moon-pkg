@@ -8,8 +8,8 @@ on:
     branches: [main, master]
 
 jobs:
-  verify-windows:
-    runs-on: windows-latest
+  verify:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,9 +20,9 @@ jobs:
           repository: nnxlxde-stack/moon-lang
           path: moon-lang
 
-      - uses: swift-actions/setup-swift@v2
+      - uses: swift-actions/setup-swift@v3
         with:
-          swift-version: "6.0.3"
+          swift-version: '6.0'
 
       - name: Build moon-lang
         working-directory: moon-lang
@@ -32,4 +32,4 @@ jobs:
         working-directory: moon-pkg
         env:
           MOON_LANG_ROOT: ${{ github.workspace }}/moon-lang
-        run: powershell -ExecutionPolicy Bypass -File scripts/verify-packages.ps1
+        run: bash scripts/verify-packages.sh
