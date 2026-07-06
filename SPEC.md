@@ -1,69 +1,71 @@
-# Moon Package Registry (Git Tags)
+# Moon Package Registry (Monorepo)
 
-Moon packages are distributed via **Git tags** (`vX.Y.Z`) and optionally **GitHub/GitLab Releases**.
+Moon packages live in this repository under `packages/<name>/` and are released via **per-package git tags** (`<name>/vX.Y.Z`).
 
-Client implementation lives in [moon-lang](https://github.com/nnxlxde-stack/moon-lang) (`moon add`, `moon vendor`, `moon publish`).
+Client: [moon-lang](https://github.com/nnxlxde-stack/moon-lang) (`moon add`, `moon vendor`, `moon publish`).
 
-## Supported hosts
+## Catalog
 
-| Host | Example dependency |
-|------|-------------------|
-| `github.com` | `github.com/org/lib: "1.0.0"` |
-| `gitlab.com` | `gitlab.com/acme/toolkit@2.0.0` |
-| Self-hosted | `git.example.com/org/lib: "0.1.0"` |
+Machine-readable index: [catalog/index.json](catalog/index.json)
 
-Vendor clones via HTTPS: `https://<host>/<owner>/<repo>.git` at tag `vX.Y.Z`.
+Raw URL:
+`https://raw.githubusercontent.com/nnxlxde-stack/moon-pkg/main/catalog/index.json`
 
-## Package layout
+## Monorepo layout
 
 ```
-my-package/
-  Moonfile              # package "my-package"
-  moon.pkg.json         # exports + moon version constraint
-  src/
-    lib.moon
+moon-pkg/
+  packages/
+    review-kit/
+      Moonfile
+      moon.pkg.json
+      src/lib.moon
+  catalog/index.json
 ```
 
-## moon.pkg.json
-
-```json
-{
-  "name": "my-package",
-  "version": "0.1.0",
-  "moon": ">=0.3.0",
-  "exports": ["src/lib.moon"]
-}
-```
-
-## Moonfile dependency syntax
+## Dependency syntax
 
 ```moonfile
 dependencies:
   Core.FS
-  github.com/org/review-kit: "0.1.0"
-  gitlab.com/acme/toolkit: "2.0.0"
+  github.com/nnxlxde-stack/moon-pkg/review-kit: "0.1.0"
 ```
+
+Import:
+
+```moon
+import github.com.nnxlxde-stack.moon-pkg.review-kit
+```
+
+## Tags
+
+| Package | Tag format | Example |
+|---------|------------|---------|
+| Standalone repo | `v0.1.0` | `github.com/org/lib: "0.1.0"` |
+| Monorepo package | `<name>/v0.1.0` | `review-kit/v0.1.0` |
+
+## Supported hosts
+
+`github.com`, `gitlab.com`, self-hosted HTTPS git.
 
 ## CLI
 
 ```bash
-moon add github.com/org/lib@0.2.0
-moon add gitlab.com/acme/toolkit@2.0.0
+moon add github.com/nnxlxde-stack/moon-pkg/review-kit@0.1.0
 moon vendor
-moon publish    # validate package + create local git tag
+moon publish
 ```
 
-Vendored cache: `.moon/packages/<owner>/<repo>/<version>/` (gitignored).
+Vendored cache: `.moon/packages/<owner>/<repo>/<package>/<version>/`
 
-## Fixtures
+## CI verification
 
-| Path | Description |
-|------|-------------|
-| `fixtures/review-kit/` | Sample package for vendor/resolver tests in moon-lang |
+Every PR runs `scripts/verify-packages.ps1` — `moon check` on all `moon.pkg.json` exports. No network required.
 
-## Related repositories
+## Adding a package
 
-| Repository | Role |
-|------------|------|
-| [moon-lang](https://github.com/nnxlxde-stack/moon-lang) | CLI client (`MoonRegistry`) |
-| [moon-vscode](https://github.com/nnxlxde-stack/moon-vscode) | Editor extension |
+1. Add `packages/<name>/` with `Moonfile`, `moon.pkg.json`, sources
+2. Register in `catalog/index.json`
+3. Open PR (CI must pass)
+4. From package dir: `moon publish` → creates tag `<name>/vX.Y.Z`
+5. Push tag to this repository

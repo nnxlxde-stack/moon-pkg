@@ -1,0 +1,35 @@
+name: Verify Packages
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['**/v*']
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  verify-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: moon-pkg
+
+      - uses: actions/checkout@v4
+        with:
+          repository: nnxlxde-stack/moon-lang
+          path: moon-lang
+
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.3.3"
+
+      - name: Build moon-lang
+        working-directory: moon-lang
+        run: swift build -v
+
+      - name: Verify all packages with moon check
+        working-directory: moon-pkg
+        env:
+          MOON_LANG_ROOT: ${{ github.workspace }}/moon-lang
+        run: powershell -ExecutionPolicy Bypass -File scripts/verify-packages.ps1

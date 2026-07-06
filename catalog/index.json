@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "registry": "github.com/nnxlxde-stack/moon-pkg",
+  "packages": [
+    {
+      "name": "review-kit",
+      "path": "packages/review-kit",
+      "tagPrefix": "review-kit",
+      "latest": "0.1.0",
+      "moon": ">=0.3.0",
+      "description": "Lightweight code review helpers for Moon agents"
+    }
+  ]
+}

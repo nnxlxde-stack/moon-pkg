@@ -1,18 +1,39 @@
 # Moon Package Registry
 
-Спецификация и фикстуры для распространения пакетов Moon через **GitHub Releases** и **semver git tags** (`vX.Y.Z`).
+Monorepo пакетов Moon с каталогом и CI-верификацией через `moon check`.
 
-Клиентская реализация (`moon add`, `moon vendor`, `moon publish`) живёт в [moon-lang](https://github.com/nnxlxde-stack/moon-lang). Поддерживаются `github.com`, `gitlab.com` и self-hosted HTTPS git.
+Клиент: [moon-lang](https://github.com/nnxlxde-stack/moon-lang) · Установка: [moon-setup](https://github.com/nnxlxde-stack/moon-setup)
+
+## Пакеты
+
+| Пакет | Версия | Зависимость |
+|-------|--------|-------------|
+| review-kit | 0.1.0 | `github.com/nnxlxde-stack/moon-pkg/review-kit: "0.1.0"` |
+
+Каталог: [catalog/index.json](catalog/index.json)
+
+## Быстрый старт
+
+```bash
+# В Moonfile проекта:
+dependencies:
+  github.com/nnxlxde-stack/moon-pkg/review-kit: "0.1.0"
+
+moon vendor
+```
+
+## Структура
+
+```
+packages/<name>/     # публикуемые пакеты
+catalog/             # индекс для tooling
+fixtures/            # копии для offline-тестов moon-lang
+scripts/             # verify-packages (CI)
+```
 
 ## Документация
 
-См. [SPEC.md](SPEC.md) — формат `moon.pkg.json`, синтаксис зависимостей в Moonfile, layout пакета.
-
-## Фикстуры
-
-| Путь | Описание |
-|------|----------|
-| `fixtures/review-kit/` | Пример пакета для тестов vendor/resolver |
+[SPEC.md](SPEC.md) — теги, monorepo, CI policy.
 
 ## Связанные репозитории
 
@@ -20,6 +41,7 @@
 |-------------|----------|
 | [moon-lang](https://github.com/nnxlxde-stack/moon-lang) | Интерпретатор и CLI |
 | [moon-vscode](https://github.com/nnxlxde-stack/moon-vscode) | Расширение VS Code |
+| [moon-setup](https://github.com/nnxlxde-stack/moon-setup) | Скрипты установки |
 
 ## Лицензия
 
